@@ -13,15 +13,5 @@ public abstract class BaseTest {
         QA.getInstance();
     }
 
-    protected String getPackageName() {
-        Bundle extras = InstrumentationRegistry.getArguments();
-
-        if ( extras != null && extras.containsKey("packageToTest")) {
-            return extras.getString("packageToTest");
-        } else {
-            fail("No packageToTest found");
-        }
-
-        return null;
-    }
+    protected abstract String getPackageName();
 }

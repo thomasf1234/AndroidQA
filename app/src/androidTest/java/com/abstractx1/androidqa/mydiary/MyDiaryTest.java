@@ -21,7 +21,7 @@ public class MyDiaryTest extends BaseTest {
 
     @org.junit.Test
     public void testAnswerQuestion() throws InterruptedException {
-        QA.getInstance().openApp("com.abstractx1.mydiary");
+        QA.getInstance().openApp(getPackageName());
         TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
         assertEquals(false, titleActivity.getCheckbox(1).isChecked());
@@ -37,7 +37,7 @@ public class MyDiaryTest extends BaseTest {
 
     @org.junit.Test
     public void testAnswerRecordingQuestion() throws InterruptedException {
-        QA.getInstance().openApp("com.abstractx1.mydiary");
+        QA.getInstance().openApp(getPackageName());
         TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
         assertEquals(false, titleActivity.getCheckbox(1).isChecked());
@@ -56,7 +56,7 @@ public class MyDiaryTest extends BaseTest {
 
     @org.junit.Test
     public void testClearRecordingQuestion() throws InterruptedException {
-        QA.getInstance().openApp("com.abstractx1.mydiary");
+        QA.getInstance().openApp(getPackageName());
         TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
         assertEquals(false, titleActivity.getCheckbox(1).isChecked());
@@ -74,5 +74,10 @@ public class MyDiaryTest extends BaseTest {
         //checkbox should be checked because we've answered the question with a recording
         assertEquals(false, titleActivity.getCheckbox(1).isChecked());
         assertEquals(null, titleActivity.getAnswerPreview(1).getText());
+    }
+
+    @Override
+    protected String getPackageName() {
+        return "com.abstractx1.mydiary";
     }
 }
