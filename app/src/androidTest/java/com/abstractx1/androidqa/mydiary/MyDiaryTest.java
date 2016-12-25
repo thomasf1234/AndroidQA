@@ -1,16 +1,13 @@
 package com.abstractx1.androidqa.mydiary;
 
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.By;
-import android.support.test.uiautomator.UiObject2;
 
 import com.abstractx1.androidqa.BaseTest;
+import com.abstractx1.androidqa.QA;
 
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -22,119 +19,58 @@ public class MyDiaryTest extends BaseTest {
 
     @org.junit.Test
     public void testAnswerQuestion() throws InterruptedException {
-        openApp();
+        QA.getInstance().openApp("com.abstractx1.mydiary");
+        TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
-        UiObject2 questionsListView = getDevice().findObject(ById("questionsListView"));
-        UiObject2 questionOne = questionsListView.getChildren().get(0);
-        UiObject2 checkBox = questionOne.findObject(ById("hasAnswerCheckBox"));
-        UiObject2 answerPreview = questionOne.findObject(ById("questionsListViewElementAnswerTextView"));
+        assertEquals(false, titleActivity.getCheckbox(1).isChecked());
+        assertEquals(null, titleActivity.getAnswerPreview(1).getText());
 
-        //checkbox is initially false
-        assertEquals(false, checkBox.isChecked());
-        //Answer preview is initially false
-        assertEquals(null, answerPreview.getText());
+        InputActivitySimulator inputActivityPage = titleActivity.clickQuestion(1);
+        inputActivityPage.inputAnswer("I have typed in this answer!");
+        titleActivity = inputActivityPage.navigateUp();
 
-        //click first question
-        questionOne.click();
-        waitForObject(ById("activity_input"));
-
-        UiObject2 answerEditText = getDevice().findObject(ById("answerEditText"));
-        answerEditText.click();
-        answerEditText.setText("I have typed in this answer!");
-
-        getDevice().findObject(By.descContains("Navigate up")).click();
-        waitForObject(ById("activity_title"));
-
-        questionsListView = getDevice().findObject(ById("questionsListView"));
-        questionOne = questionsListView.getChildren().get(0);
-        checkBox = questionOne.findObject(ById("hasAnswerCheckBox"));
-        answerPreview = questionOne.findObject(ById("questionsListViewElementAnswerTextView"));
-
-        //checkbox is initially false
-        assertEquals(true, checkBox.isChecked());
-        //Answer preview is initially false
-        assertEquals("I have typed in this answer!", answerPreview.getText());
+        assertEquals(true, titleActivity.getCheckbox(1).isChecked());
+        assertEquals("I have typed in this answer!", titleActivity.getAnswerPreview(1).getText());
     }
 
     @org.junit.Test
     public void testAnswerRecordingQuestion() throws InterruptedException {
-        //openSettings();
-        //getDevice().findObject(By.textContains("App")).click();
-        //waitForObject(By.res(Pattern.compile(".*action_bar.*", Pattern.DOTALL)).hasDescendant(By.textContains("App")));
-        //getDevice().findObject(By.)
+        QA.getInstance().openApp("com.abstractx1.mydiary");
+        TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
-        openApp();
+        assertEquals(false, titleActivity.getCheckbox(1).isChecked());
+        assertEquals(null, titleActivity.getAnswerPreview(1).getText());
 
-        UiObject2 questionsListView = getDevice().findObject(ById("questionsListView"));
-        UiObject2 questionOne = questionsListView.getChildren().get(0);
-        UiObject2 checkBox = questionOne.findObject(ById("hasAnswerCheckBox"));
-        UiObject2 answerPreview = questionOne.findObject(ById("questionsListViewElementAnswerTextView"));
+        InputActivitySimulator inputActivityPage = titleActivity.clickQuestion(1);
+        assertEquals(true, inputActivityPage.getDisplayTime().equals("0:00"));
 
-        //checkbox is initially false
-        assertEquals(false, checkBox.isChecked());
-        //Answer preview is initially false
-        assertEquals(null, answerPreview.getText());
+        inputActivityPage.makeRecording();
+        titleActivity = inputActivityPage.navigateUp();
 
-        //click first question
-        questionOne.click();
-        waitForObject(ById("activity_input"));
+        //checkbox should be checked because we've answered the question with a recording
+        assertEquals(true, titleActivity.getCheckbox(1).isChecked());
+        assertEquals(null, titleActivity.getAnswerPreview(1).getText());
+    }
 
-        UiObject2 recordButton = getDevice().findObject(ById("recordButton"));
-        UiObject2 playButton = getDevice().findObject(ById("playButton"));
-        UiObject2 clearButton = getDevice().findObject(ById("playButton"));
-        UiObject2 recordingDurationTextView = getDevice().findObject(ById("recordingDurationTextView"));
+    @org.junit.Test
+    public void testClearRecordingQuestion() throws InterruptedException {
+        QA.getInstance().openApp("com.abstractx1.mydiary");
+        TitleActivitySimulator titleActivity = new TitleActivitySimulator();
 
-        //initially only recordButton exists
-        assertThat(recordButton, notNullValue());
-        assertEquals(null, playButton);
-        assertEquals(null, clearButton);
-        assertEquals(true, recordingDurationTextView.getText().equals("0:00"));
+        assertEquals(false, titleActivity.getCheckbox(1).isChecked());
+        assertEquals(null, titleActivity.getAnswerPreview(1).getText());
 
-        recordButton.click();
+        InputActivitySimulator inputActivityPage = titleActivity.clickQuestion(1);
+        assertEquals(true, inputActivityPage.getDisplayTime().equals("0:00"));
 
-        if (minAndroid6()) {
-            //should request for record audio permission
-            UiObject2 allowPermissionButton = waitForObject(By.text("Allow"));
-            allowPermissionButton.click();
-        }
+        inputActivityPage.makeRecording();
+        inputActivityPage.clearRecording();
+        assertEquals(true, inputActivityPage.getDisplayTime().equals("0:00"));
 
-        Thread.sleep(2000);
+        titleActivity = inputActivityPage.navigateUp();
 
-        recordButton = getDevice().findObject(ById("recordButton"));
-        playButton = getDevice().findObject(ById("playButton"));
-        clearButton = getDevice().findObject(ById("playButton"));
-        recordingDurationTextView = getDevice().findObject(ById("recordingDurationTextView"));
-
-        assertEquals(null, playButton);
-        assertEquals(null, clearButton);
-        //timer should have updated
-        assertEquals(false, recordingDurationTextView.getText().equals("0:00"));
-
-        recordButton.click();
-
-        //confirmation box should appear
-        waitForObject(By.res("android:id/message").text("Do you want to save the current recording?"));
-        getDevice().findObject(By.text("Yes")).click();
-
-        recordButton = getDevice().findObject(ById("recordButton"));
-        playButton = getDevice().findObject(ById("playButton"));
-        clearButton = getDevice().findObject(ById("playButton"));
-
-        assertEquals(null, recordButton);
-        assertThat(playButton, notNullValue());
-        assertThat(clearButton, notNullValue());
-
-        getDevice().findObject(By.desc("Navigate up")).click();
-        waitForObject(ById("activity_title"));
-
-        questionsListView = getDevice().findObject(ById("questionsListView"));
-        questionOne = questionsListView.getChildren().get(0);
-        checkBox = questionOne.findObject(ById("hasAnswerCheckBox"));
-        answerPreview = questionOne.findObject(ById("questionsListViewElementAnswerTextView"));
-
-        //checkbox is now checked because we have recorded
-        assertEquals(true, checkBox.isChecked());
-        //Answer preview is empty because we have not typed anything
-        assertEquals(null, answerPreview.getText());
+        //checkbox should be checked because we've answered the question with a recording
+        assertEquals(false, titleActivity.getCheckbox(1).isChecked());
+        assertEquals(null, titleActivity.getAnswerPreview(1).getText());
     }
 }
