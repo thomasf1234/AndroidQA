@@ -3,7 +3,7 @@
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="com.abstractx1.androidqa" >
+        android:targetPackage="com.abstractx1.androidqa.test" >
     </instrumentation>
     <application
         android:allowBackup="true"

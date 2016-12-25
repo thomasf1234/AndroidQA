@@ -11,7 +11,6 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
 import android.util.Log;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 
 import java.io.File;
@@ -40,6 +39,14 @@ public abstract class BaseTest {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
         waitForObject(By.pkg(getPackageName()), 10000);
+    }
+
+    protected void openSettings() throws InterruptedException {
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        Intent intent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        waitForObject(By.res("android:id/action_bar"), 10000);
     }
 
     protected UiObject2 waitForObject(BySelector selector) throws InterruptedException {
@@ -91,4 +98,11 @@ public abstract class BaseTest {
         return null;
     }
 
+    protected int deviceVERSIONSDK() {
+        return Integer.valueOf(android.os.Build.VERSION.SDK);
+    }
+
+    protected boolean minAndroid6() {
+        return deviceVERSIONSDK() >= 23;
+    }
 }
