@@ -1,4 +1,4 @@
-package com.abstractx1.androidqa.mydiary;
+package com.abstractx1.androidqa.mydiary.simulators;
 
 import com.abstractx1.androidqa.AlertDialogSimulator;
 

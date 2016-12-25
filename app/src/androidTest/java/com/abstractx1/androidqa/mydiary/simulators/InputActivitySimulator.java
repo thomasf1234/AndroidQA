@@ -1,4 +1,4 @@
-package com.abstractx1.androidqa.mydiary;
+package com.abstractx1.androidqa.mydiary.simulators;
 
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiObject2;

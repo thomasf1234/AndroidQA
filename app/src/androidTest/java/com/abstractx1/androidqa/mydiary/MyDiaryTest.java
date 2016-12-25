@@ -4,6 +4,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.abstractx1.androidqa.BaseTest;
 import com.abstractx1.androidqa.QA;
+import com.abstractx1.androidqa.mydiary.simulators.InputActivitySimulator;
+import com.abstractx1.androidqa.mydiary.simulators.TitleActivitySimulator;
 
 import org.junit.runner.RunWith;
 
