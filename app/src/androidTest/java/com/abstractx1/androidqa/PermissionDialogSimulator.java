@@ -3,6 +3,8 @@ package com.abstractx1.androidqa;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiObject2;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by tfisher on 25/12/2016.
  */
@@ -21,6 +23,7 @@ public class PermissionDialogSimulator extends BaseSimulator {
     }
 
     private UiObject2 getButton(String text) {
-        return getRootObject().findObject(By.clazz("android.widget.Button").text(text));
+        Pattern pattern = Pattern.compile(String.format("(?i:.*%s.*)", text));
+        return getRootObject().findObject(By.clazz("android.widget.Button").text(pattern));
     }
 }

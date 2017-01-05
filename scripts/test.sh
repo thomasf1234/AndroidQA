@@ -3,17 +3,16 @@
 set -e
 
 #run from app directory 
-HELPER=~/AndroidStudioProjects/AndroidHelp/scripts/helper.sh
-APK_OUTPUT_DIR=app/build/outputs/apk
-TEST_APK_DEFAULT_PATH=$APK_OUTPUT_DIR/app-debug-androidTest.apk
+HELPER=~/NetBeansProjects/AndroidHelp/scripts/helper.sh
 
-$HELPER build_test
-$HELPER deploy $TEST_APK_DEFAULT_PATH
+$HELPER deploy_testpkg
 
 METHODS_TO_TEST=(
   "MyDiaryTest#testAnswerQuestion"
-  "MyDiaryTest#testAnswerRecordingQuestion"
-  "MyDiaryTest#testClearRecordingQuestion"
+  "MyDiaryTest#testRecording"
+  "MyDiaryTest#testAnswerAndRecording"
+  "MyDiaryTest#testClearRecording"
+  "MyDiaryTest#testRerecording"
 )
   
 for method in "${METHODS_TO_TEST[@]}"

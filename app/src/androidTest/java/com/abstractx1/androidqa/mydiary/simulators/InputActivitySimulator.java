@@ -46,9 +46,9 @@ public class InputActivitySimulator extends BaseActivitySimulator {
         return new TitleActivitySimulator();
     }
 
-    public void makeRecording() throws InterruptedException {
+    public void makeRecording(boolean hasPermission) throws InterruptedException {
         clickRecordButton();
-        if (QA.getInstance().isDeviceAndroid6AndLater()) {
+        if (!hasPermission && QA.getInstance().isDeviceAndroid6AndLater()) {
             PermissionDialogSimulator permissionDialog = new PermissionDialogSimulator();
             permissionDialog.clickAllow();
             reload();
